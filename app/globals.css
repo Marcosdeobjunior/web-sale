@@ -1,0 +1,105 @@
+@import "../styles/industry.css";
+
+/* Base do protótipo */
+body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); text-wrap: pretty; }
+a { color: var(--color-accent-700); }
+a:hover { color: var(--color-accent-900); }
+button { font: inherit; }
+
+/* Layout */
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+.gutter { padding-inline: clamp(20px, 5vw, 72px); }
+.container { flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 72px); box-sizing: border-box; }
+.top { position: sticky; top: 0; z-index: 10; background: var(--color-bg); }
+.admin-bar {
+  background: var(--color-accent-900); color: var(--color-bg);
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  padding: 8px clamp(20px, 5vw, 72px); font-size: 13px;
+}
+.admin-bar a { color: var(--color-bg); }
+.admin-bar strong { font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.site-nav { border-bottom: 1px solid var(--color-divider); }
+.site-nav .nav-brand { font-size: 22px; text-transform: uppercase; letter-spacing: .04em; color: var(--color-text); }
+.site-footer { border-top: 1px solid var(--color-divider); }
+.site-footer-inner {
+  max-width: 1200px; margin: 0 auto; padding: 28px clamp(20px, 5vw, 72px);
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: center; font-size: 13px; color: var(--muted-70);
+}
+.site-footer-brand { font-family: var(--font-heading); font-weight: 600; font-size: 16px; text-transform: uppercase; color: var(--color-text); }
+
+:root {
+  --muted-70: color-mix(in srgb, var(--color-text) 70%, transparent);
+  --muted-78: color-mix(in srgb, var(--color-text) 78%, transparent);
+  --muted-55: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* Tipografia */
+.meta { font-size: 13px; color: var(--muted-70); }
+.lead { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted-78); }
+.upper { text-transform: uppercase; }
+.h-page { margin: 0; font-size: clamp(40px, 5vw, 64px); text-transform: uppercase; line-height: 1; }
+.h-account { margin: 0; font-size: clamp(40px, 5vw, 60px); text-transform: uppercase; line-height: 1; }
+.h-step { margin: 0; font-size: 40px; text-transform: uppercase; line-height: 1; }
+.h-section { margin: 0; font-size: 26px; text-transform: uppercase; line-height: 1.1; }
+.label-caps { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+.price { font-family: var(--font-heading); font-weight: 600; }
+.item-name { font-family: var(--font-heading); font-size: 20px; text-transform: uppercase; font-weight: 600; }
+.accent-text { color: var(--color-accent-700); }
+
+/* Kicker de seção: 13px, 600, uppercase, accent-700, sobre divider */
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  border-bottom: 1px solid var(--color-divider); padding-bottom: 12px; margin-bottom: 36px;
+}
+.kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--color-accent-700); }
+
+/* Grids */
+.grid-featured { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px 32px; }
+.grid-catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px 32px; }
+.grid-side { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 48px; align-items: start; }
+.btn-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stack { display: flex; flex-direction: column; }
+.row { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.wrap { flex-wrap: wrap; }
+
+/* Linhas de lista (carrinho, pedidos) */
+.list { display: flex; flex-direction: column; border-top: 1px solid var(--color-divider); }
+.list-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--color-divider); }
+.thumb { aspect-ratio: 16 / 10; border: 1px solid var(--color-divider); }
+
+/* Abas */
+.tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--color-divider); overflow-x: auto; overflow-y: hidden; }
+.tab {
+  background: transparent; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  padding: 12px 0; cursor: pointer; font-family: var(--font-heading); font-weight: 600; font-size: 18px;
+  text-transform: uppercase; letter-spacing: .03em; color: var(--muted-55); white-space: nowrap;
+}
+.tab[aria-selected="true"] { border-bottom-color: var(--color-accent); color: var(--color-text); }
+
+/* Placeholder de imagem (os prints serão enviados pelo dono) */
+.image-slot {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(45deg, transparent 0 7px, color-mix(in srgb, var(--color-text) 6%, transparent) 7px 8px);
+  color: var(--muted-55); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; text-align: center; padding: 8px;
+}
+.image-slot img, .image-slot video { width: 100%; height: 100%; object-fit: cover; }
+.media { position: relative; }
+
+/* Respostas / FAQ */
+.answer { border-left: 2px solid var(--color-accent); padding-left: 12px; display: flex; flex-direction: column; gap: 4px; }
+.faq-item h3 { margin: 0; font-size: 20px; text-transform: uppercase; }
+.faq-item p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--muted-78); }
+
+.check-label { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
+.check-label input { accent-color: var(--color-accent); }
+.link-btn { background: none; border: 0; padding: 0; cursor: pointer; color: var(--color-accent-700); text-decoration: underline; text-underline-offset: 3px; font-size: inherit; }
+.link-btn:hover { color: var(--color-accent-900); }
+.nav .link-btn { color: inherit; text-decoration: none; font-size: 14px; }
+.nav .link-btn:hover { color: var(--color-accent); }
+.admin-bar .link-btn { color: var(--color-bg); }
+
+@media (max-width: 560px) {
+  .list-row { grid-template-columns: 72px minmax(0, 1fr); }
+  .list-row > :last-child { grid-column: 1 / -1; justify-content: flex-start; align-items: flex-start; }
+}
