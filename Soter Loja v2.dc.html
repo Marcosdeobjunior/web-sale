@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="_ds/industry-cdefe1fe-b29c-4deb-820e-1cfb5bebf8af/styles.css"><script src="_ds/industry-cdefe1fe-b29c-4deb-820e-1cfb5bebf8af/_ds_bundle.js"></script><script src="./image-slot.js"></script><style>body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);text-wrap:pretty}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-900)}button{font:inherit}</style></helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+<div style="position:sticky;top:0;z-index:10;background:var(--color-bg)">
+<sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><div style="background:var(--color-accent-900);color:var(--color-bg);display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:8px clamp(20px,5vw,72px);font-size:13px"><span style="font-weight:600;letter-spacing:.08em;text-transform:uppercase">Modo administrador</span><span>Use “Editar” em qualquer projeto para alterar o site.</span><span style="flex:1"></span><a href="#" onClick="{{ goAdmin }}" style="color:var(--color-bg)">Painel</a><a href="#" onClick="{{ logout }}" style="color:var(--color-bg)">Sair</a></div></sc-if>
+<nav class="nav" style="border-bottom:1px solid var(--color-divider);padding-inline:clamp(20px,5vw,72px)">
+<a href="#" class="nav-brand" onClick="{{ goHome }}" style="font-size:22px;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;color:var(--color-text)">Sóter</a>
+<a href="#" onClick="{{ goCatalog }}">Projetos</a>
+<a href="#" onClick="{{ goAbout }}">Sobre</a>
+<sc-if value="{{ isGuest }}" hint-placeholder-val="{{ true }}"><a href="#" onClick="{{ goLogin }}">Entrar</a></sc-if>
+<sc-if value="{{ isClient }}" hint-placeholder-val="{{ false }}"><a href="#" onClick="{{ goAccount }}">Minha conta</a></sc-if>
+<sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><a href="#" onClick="{{ goAdmin }}">Painel</a></sc-if>
+<sc-if value="{{ notAdmin }}" hint-placeholder-val="{{ true }}"><button type="button" class="btn btn-secondary" onClick="{{ goCart }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Carrinho ({{ cartCount }})</button>
+</sc-if>
+</nav></div>
+
+<main style="flex:1;width:100%;max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,72px);box-sizing:border-box">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<section style="padding:96px 0 72px;display:flex;flex-direction:column;gap:28px" data-screen-label="Home">
+<h1 style="margin:0;font-size:clamp(44px,7vw,92px);line-height:1.02;text-transform:uppercase;letter-spacing:.01em;max-width:14ch">Sites e apps prontos para o seu negócio.</h1>
+<p style="margin:0;font-size:18px;line-height:1.5;max-width:56ch;color:color-mix(in srgb,var(--color-text) 78%,transparent)">Projetos completos, testados e com guia de instalação. Você compra, baixa e coloca no ar — sem esperar semanas por um desenvolvedor.</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-primary blueprint" onClick="{{ goCatalog }}" style="padding:12px 20px;font-size:15px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Ver projetos<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button><a class="btn btn-ghost" href="mailto:contato@soter.dev" style="padding:12px 16px;font-size:15px">Falar comigo</a></div>
+</section>
+
+<section style="padding:24px 0 72px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:1px solid var(--color-divider);padding-bottom:12px;margin-bottom:36px"><span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">01 · Projetos em destaque</span><a href="#" onClick="{{ goCatalog }}" style="font-size:14px">Ver todos</a></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:40px 32px">
+<sc-for list="{{ featured }}" as="p" hint-placeholder-count="3">
+<article class="card blueprint" style="padding:0;gap:0;cursor:pointer" onClick="{{ p.open }}"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div class="duotone" style="aspect-ratio:16/10;border-bottom:1px solid var(--color-divider)"><image-slot id="{{ p.slotId }}" shape="rect" placeholder="Print do projeto"></image-slot></div>
+<div style="padding:18px;display:flex;flex-direction:column;gap:10px">
+<span class="card-kicker">{{ p.tipo }}</span>
+<h3 class="card-title" style="margin:0;font-size:22px;text-transform:uppercase">{{ p.nome }}</h3>
+<p class="card-body" style="line-height:1.5">{{ p.resumo }}</p>
+<div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px"><span style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ p.precoFmt }}</span><sc-if value="{{ showRatings }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">★ {{ p.nota }} · {{ p.aval }} avaliações</span></sc-if></div>
+</div></article>
+</sc-for>
+</div>
+</section>
+
+<section style="padding:24px 0 72px">
+<div style="border-bottom:1px solid var(--color-divider);padding-bottom:12px;margin-bottom:36px"><span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">02 · Como funciona</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px">
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:var(--font-heading);font-weight:600;font-size:40px;color:var(--color-accent)">01</span><h3 style="margin:0;font-size:22px;text-transform:uppercase">Escolha</h3><p style="margin:0;font-size:15px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 78%,transparent)">Teste a demo ao vivo antes de comprar e veja se o projeto serve para o seu negócio.</p></div>
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:var(--font-heading);font-weight:600;font-size:40px;color:var(--color-accent)">02</span><h3 style="margin:0;font-size:22px;text-transform:uppercase">Pague</h3><p style="margin:0;font-size:15px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 78%,transparent)">Pix, cartão ou boleto. Pagamento único, sem mensalidade.</p></div>
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:var(--font-heading);font-weight:600;font-size:40px;color:var(--color-accent)">03</span><h3 style="margin:0;font-size:22px;text-transform:uppercase">Baixe e publique</h3><p style="margin:0;font-size:15px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 78%,transparent)">O download sai na hora, com um guia passo a passo para colocar no ar.</p></div>
+</div>
+</section>
+
+<section style="padding:24px 0 72px">
+<div style="border-bottom:1px solid var(--color-divider);padding-bottom:12px;margin-bottom:36px"><span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">03 · Quem já usa</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px">
+<sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="2">
+<figure style="margin:0;display:flex;flex-direction:column;gap:16px"><blockquote style="margin:0;font-family:var(--font-heading);font-weight:500;font-size:26px;line-height:1.3">“{{ t.txt }}”</blockquote><figcaption style="font-size:14px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">— {{ t.nome }}, {{ t.neg }}</figcaption></figure>
+</sc-for>
+</div>
+</section>
+
+<section ref="{{ aboutRef }}" style="padding:24px 0 96px;scroll-margin-top:80px">
+<div style="border-bottom:1px solid var(--color-divider);padding-bottom:12px;margin-bottom:36px"><span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">04 · Sobre</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px;align-items:center">
+<figure class="blueprint duotone" style="margin:0;aspect-ratio:4/3"><image-slot id="sobre-foto" shape="rect" placeholder="Sua foto"></image-slot><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></figure>
+<div style="display:flex;flex-direction:column;gap:16px"><h2 style="margin:0;font-size:36px;text-transform:uppercase;line-height:1.1">Feito por quem desenvolve sob medida</h2><p style="margin:0;font-size:16px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 78%,transparent)">A Sóter transforma projetos que já funcionam em clientes reais em produtos prontos para outros negócios. Cada um vem com o código completo e suporte por e-mail.</p><a href="mailto:contato@soter.dev" style="font-size:15px">contato@soter.dev</a></div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isCatalog }}" hint-placeholder-val="{{ false }}">
+<section style="padding:64px 0 96px" data-screen-label="Catálogo">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--color-divider);padding-bottom:20px;margin-bottom:40px">
+<div style="display:flex;flex-direction:column;gap:8px"><h1 style="margin:0;font-size:clamp(40px,5vw,64px);text-transform:uppercase;line-height:1">Projetos</h1><span style="font-size:14px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ countLabel }}</span></div>
+<div class="seg" role="radiogroup" aria-label="Filtrar">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="3"><label class="seg-opt"><input type="radio" name="cat" checked="{{ f.active }}" onChange="{{ f.pick }}" style="position:absolute;opacity:0;pointer-events:none">{{ f.label }}</label></sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:40px 32px">
+<sc-for list="{{ filtered }}" as="p" hint-placeholder-count="4">
+<article class="card blueprint" style="padding:0;gap:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div class="duotone" style="aspect-ratio:16/10;border-bottom:1px solid var(--color-divider)"><image-slot id="{{ p.slotId }}" shape="rect" placeholder="Print do projeto"></image-slot></div>
+<div style="padding:18px;display:flex;flex-direction:column;gap:10px;flex:1">
+<div style="display:flex;gap:8px;align-items:center"><span class="card-kicker">{{ p.tipo }}</span><sc-if value="{{ p.novo }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent">Novo</span></sc-if></div>
+<h3 class="card-title" style="margin:0;font-size:22px;text-transform:uppercase">{{ p.nome }}</h3>
+<p class="card-body" style="line-height:1.5">{{ p.resumo }}</p>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ p.tech }}" as="tc" hint-placeholder-count="2"><span class="tag tag-neutral">{{ tc.n }}</span></sc-for></div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px"><span style="font-family:var(--font-heading);font-weight:600;font-size:24px">{{ p.precoFmt }}</span><sc-if value="{{ showRatings }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">★ {{ p.nota }} ({{ p.aval }})</span></sc-if></div>
+<sc-if value="{{ notAdmin }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button type="button" class="btn btn-secondary" onClick="{{ p.open }}">Detalhes</button><button type="button" class="btn btn-primary" onClick="{{ p.buy }}">Comprar</button></div></sc-if><sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button type="button" class="btn btn-secondary" onClick="{{ p.open }}">Ver página</button><button type="button" class="btn btn-primary" onClick="{{ p.edit }}">Editar</button></div></sc-if>
+</div></article>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<section style="padding:32px 0 96px" data-screen-label="Detalhe do projeto">
+<div style="display:flex;gap:8px;font-size:14px;margin-bottom:28px;color:color-mix(in srgb,var(--color-text) 70%,transparent)"><a href="#" onClick="{{ goCatalog }}">Projetos</a><span>/</span><span>{{ cur.nome }}</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:14px;flex:1.4">
+<div class="blueprint duotone" style="aspect-ratio:16/10"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<sc-for list="{{ gallery }}" as="g" hint-placeholder-count="1"><div style="position:absolute;inset:0;display:{{ g.display }}"><image-slot id="{{ g.slotId }}" shape="rect" placeholder="{{ g.placeholder }}"></image-slot></div></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+<sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4"><button type="button" onClick="{{ g.pick }}" style="background:transparent;border:1px solid {{ g.border }};color:{{ g.color }};padding:10px 8px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px;font-size:13px"><span style="font-family:var(--font-heading);font-weight:600;font-size:16px">{{ g.num }}</span>{{ g.label }}</button></sc-for>
+</div>
+</div>
+<aside class="card blueprint" style="padding:28px;gap:16px;position:sticky;top:96px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="card-kicker">{{ cur.tipo }}</span><sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button type="button" class="btn btn-secondary" onClick="{{ cur.edit }}" style="font-size:13px;padding:4px 10px">Editar produto</button></sc-if></div>
+<h1 style="margin:0;font-size:40px;line-height:1.02;text-transform:uppercase">{{ cur.nome }}</h1>
+<sc-if value="{{ showRatings }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">★ {{ cur.nota }} · {{ cur.aval }} avaliações</span></sc-if>
+<p style="margin:0;font-size:15px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 78%,transparent)">{{ cur.resumo }}</p>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:var(--font-heading);font-weight:600;font-size:44px;line-height:1">{{ cur.precoFmt }}</span><sc-if value="{{ pixDiscount }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:var(--color-accent-700)">ou {{ cur.pixFmt }} no Pix (5% off)</span></sc-if></div>
+<div style="display:flex;flex-direction:column;gap:8px"><button type="button" class="btn btn-primary blueprint" onClick="{{ cur.buy }}" style="padding:12px;font-size:15px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Comprar agora</button><button type="button" class="btn btn-secondary" onClick="{{ cur.add }}" style="padding:11px;font-size:15px">{{ addLabel }}</button><a class="btn btn-ghost" href="#" style="padding:10px;font-size:15px">Ver demo ao vivo<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg></a></div>
+<div style="border-top:1px solid var(--color-divider);padding-top:16px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">O que está incluso</span>
+<sc-for list="{{ cur.incluso }}" as="it" hint-placeholder-count="4"><div style="display:flex;gap:8px;align-items:flex-start;font-size:14px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><path d="M20 6 9 17l-5-5"></path></svg><span>{{ it }}</span></div></sc-for>
+</div>
+</aside>
+</div>
+
+<div style="margin-top:72px">
+<div style="display:flex;gap:28px;border-bottom:1px solid var(--color-divider);overflow-x:auto;overflow-y:hidden">
+<sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4"><button type="button" onClick="{{ tb.pick }}" style="background:transparent;border:0;border-bottom:2px solid {{ tb.border }};margin-bottom:-1px;padding:12px 0;cursor:pointer;font-family:var(--font-heading);font-weight:600;font-size:18px;text-transform:uppercase;letter-spacing:.03em;color:{{ tb.color }};white-space:nowrap">{{ tb.label }}</button></sc-for>
+</div>
+<div style="padding:32px 0;max-width:760px">
+<sc-if value="{{ tabDesc }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px"><sc-for list="{{ cur.desc }}" as="d" hint-placeholder-count="2"><p style="margin:0;font-size:16px;line-height:1.65">{{ d }}</p></sc-for></div></sc-if>
+<sc-if value="{{ tabTech }}" hint-placeholder-val="{{ false }}"><table class="table" style="width:100%"><thead><tr><th>Tecnologia</th><th>Para que serve</th></tr></thead><tbody><sc-for list="{{ cur.tech }}" as="tc" hint-placeholder-count="2"><tr><td style="font-weight:600">{{ tc.n }}</td><td>{{ tc.d }}</td></tr></sc-for></tbody></table></sc-if>
+<sc-if value="{{ tabReviews }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:28px"><sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--color-divider);padding-bottom:24px"><span style="color:var(--color-accent);letter-spacing:.1em">★★★★★</span><p style="margin:0;font-size:16px;line-height:1.6">{{ r.txt }}</p><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ r.nome }} · {{ r.neg }}</span></div></sc-for></div></sc-if>
+<sc-if value="{{ tabFaq }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:24px"><sc-for list="{{ curFaq }}" as="q" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px"><h3 style="margin:0;font-size:20px;text-transform:uppercase">{{ q.q }}</h3><p style="margin:0;font-size:15px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 78%,transparent)">{{ q.a }}</p></div></sc-for></div></sc-if>
+</div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+<section style="padding:48px 0 96px" data-screen-label="Checkout">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:48px">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:8px"><div style="height:2px;background:{{ s.bar }}"></div><span style="font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:{{ s.color }}">{{ s.n }} {{ s.label }}</span></div></sc-for>
+</div>
+
+<sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
+<div class="card blueprint" style="padding:clamp(28px,5vw,56px);gap:20px;max-width:760px;margin:0 auto"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+<h1 style="margin:0;font-size:44px;text-transform:uppercase;line-height:1">Pagamento confirmado</h1>
+<p style="margin:0;font-size:16px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 78%,transparent)">Os links também foram enviados para <b>{{ emailShown }}</b>. Eles ficam ativos por 30 dias.</p>
+<div style="display:flex;flex-direction:column;border-top:1px solid var(--color-divider)">
+<sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="1"><div style="display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--color-divider);flex-wrap:wrap"><div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px"><b style="font-family:var(--font-heading);font-size:20px;text-transform:uppercase">{{ c.nome }}</b><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">Código-fonte + guia (.zip)</span></div><a class="btn btn-primary" href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Baixar</a></div></sc-for>
+</div>
+<button type="button" class="btn btn-ghost" onClick="{{ finish }}" style="align-self:flex-start">{{ finishLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ notS4 }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:48px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+
+<sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
+<h1 style="margin:0;font-size:40px;text-transform:uppercase;line-height:1">Carrinho</h1>
+<sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start;padding:24px 0"><p style="margin:0;font-size:16px">Seu carrinho está vazio.</p><button type="button" class="btn btn-primary" onClick="{{ goCatalog }}">Ver projetos</button></div></sc-if>
+<div style="display:flex;flex-direction:column;border-top:1px solid var(--color-divider)">
+<sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="1"><div style="display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid var(--color-divider)"><div class="duotone" style="aspect-ratio:16/10;border:1px solid var(--color-divider)"><image-slot id="{{ c.slotId }}" shape="rect" placeholder="Print"></image-slot></div><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><b style="font-family:var(--font-heading);font-size:20px;text-transform:uppercase">{{ c.nome }}</b><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ c.tipo }} · licença para 1 negócio</span></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><b style="font-size:16px">{{ c.precoFmt }}</b><button type="button" class="btn btn-ghost" onClick="{{ c.remove }}" style="font-size:13px;padding:2px 4px">Remover</button></div></div></sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onClick="{{ goCatalog }}">Continuar comprando</button><button type="button" class="btn btn-primary" onClick="{{ toStep2 }}" disabled="{{ cartEmpty }}" style="padding:12px 20px">Continuar</button></div>
+</sc-if>
+
+<sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin:0;font-size:40px;text-transform:uppercase;line-height:1">Seus dados</h1>
+<div class="field"><label for="ck-nome">Nome completo</label><input id="ck-nome" class="input" value="{{ nome }}" onInput="{{ setNome }}" placeholder="Maria Souza"></div>
+<div class="field"><label for="ck-email">E-mail — é para onde vai o download</label><input id="ck-email" type="email" class="input" value="{{ email }}" onInput="{{ setEmail }}" placeholder="maria@seunegocio.com.br"></div>
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" onClick="{{ toStep1 }}">Voltar</button><button type="button" class="btn btn-primary" onClick="{{ toStep3 }}" disabled="{{ dataInvalid }}" style="padding:12px 20px">Ir para pagamento</button></div>
+</sc-if>
+
+<sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin:0;font-size:40px;text-transform:uppercase;line-height:1">Pagamento</h1>
+<div class="seg" role="radiogroup" aria-label="Forma de pagamento" style="align-self:flex-start">
+<sc-for list="{{ payOpts }}" as="o" hint-placeholder-count="3"><label class="seg-opt"><input type="radio" name="pay" checked="{{ o.active }}" onChange="{{ o.pick }}" style="position:absolute;opacity:0;pointer-events:none">{{ o.label }}</label></sc-for>
+</div>
+<sc-if value="{{ payPix }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center">
+<div class="blueprint" style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,transparent 0 7px,var(--color-accent-100) 7px 8px);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-accent-700)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>QR code Pix</div>
+<div style="display:flex;flex-direction:column;gap:12px;min-width:0"><p style="margin:0;font-size:15px;line-height:1.5">Escaneie com o app do seu banco ou copie o código abaixo. O download é liberado assim que o pagamento cair.</p><div class="input" style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--color-text) 70%,transparent);display:flex;align-items:center">00020126580014BR.GOV.BCB.PIX0136a1f4…</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-secondary" onClick="{{ copyPix }}">{{ copyLabel }}</button><button type="button" class="btn btn-primary" onClick="{{ toStep4 }}">Já paguei</button></div></div>
+</div>
+</sc-if>
+<sc-if value="{{ payCard }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="field"><label for="ck-cn">Número do cartão</label><input id="ck-cn" class="input" placeholder="0000 0000 0000 0000" inputmode="numeric"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px"><div class="field"><label for="ck-val">Validade</label><input id="ck-val" class="input" placeholder="MM/AA"></div><div class="field"><label for="ck-cvv">CVV</label><input id="ck-cvv" class="input" placeholder="123"></div><div class="field"><label for="ck-par">Parcelas</label><select id="ck-par" class="input"><option>1x sem juros</option><option>2x sem juros</option><option>3x sem juros</option></select></div></div>
+<button type="button" class="btn btn-primary blueprint" onClick="{{ toStep4 }}" style="padding:12px;font-size:15px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Pagar {{ totalFmt }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ payBoleto }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start"><p style="margin:0;font-size:15px;line-height:1.5">O boleto vence em 3 dias úteis. O download é liberado quando o banco confirmar — normalmente em até 2 dias.</p><button type="button" class="btn btn-primary" onClick="{{ toStep4 }}" style="padding:12px 20px">Gerar boleto</button></div>
+</sc-if>
+<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Pagamento processado com segurança</div>
+<button type="button" class="btn btn-ghost" onClick="{{ toStep2 }}" style="align-self:flex-start">Voltar</button>
+</sc-if>
+</div>
+
+<aside class="card blueprint" style="padding:24px;gap:14px;position:sticky;top:96px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">Resumo do pedido</span>
+<sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="1"><div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span>{{ c.nome }}</span><span>{{ c.precoFmt }}</span></div></sc-for>
+<div style="border-top:1px solid var(--color-divider);padding-top:12px;display:flex;flex-direction:column;gap:8px;font-size:14px">
+<div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>{{ subtotalFmt }}</span></div>
+<sc-if value="{{ hasDiscount }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:space-between;color:var(--color-accent-700)"><span>Desconto Pix (5%)</span><span>− {{ discountFmt }}</span></div></sc-if>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:4px"><b>Total</b><span style="font-family:var(--font-heading);font-weight:600;font-size:28px">{{ totalFmt }}</span></div>
+</div>
+</aside>
+</div>
+</sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+<section style="padding:80px 0 96px;display:flex;justify-content:center" data-screen-label="Login">
+<div class="card blueprint" style="width:100%;max-width:440px;padding:36px;gap:18px;box-sizing:border-box"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<h1 style="margin:0;font-size:44px;text-transform:uppercase;line-height:1">Entrar</h1>
+<p style="margin:0;font-size:15px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 70%,transparent)">Acesse os projetos que você comprou, baixe arquivos e tire dúvidas.</p>
+<div class="field"><label for="lg-email">E-mail</label><input id="lg-email" type="email" class="input" value="{{ loginEmail }}" onInput="{{ setLoginEmail }}" placeholder="voce@seunegocio.com.br"></div>
+<div class="field"><label for="lg-pass">Senha</label><input id="lg-pass" type="password" class="input" value="{{ loginPass }}" onInput="{{ setLoginPass }}" placeholder="••••••••"></div>
+<sc-if value="{{ hasLoginError }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--color-accent-900);font-weight:600">{{ loginError }}</span></sc-if>
+<button type="button" class="btn btn-primary blueprint" onClick="{{ doLogin }}" style="padding:12px;font-size:15px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Entrar</button>
+<a href="#" style="font-size:13px;align-self:flex-start">Esqueci minha senha</a>
+<div style="border-top:1px solid var(--color-divider);padding-top:16px;display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">Acesso de demonstração</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button type="button" class="btn btn-secondary" onClick="{{ demoClient }}">Como cliente</button><button type="button" class="btn btn-secondary" onClick="{{ demoAdmin }}">Como administrador</button></div><span style="font-size:12px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">admin@soter.dev abre o painel; qualquer outro e-mail entra como cliente.</span></div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+<section style="padding:56px 0 96px" data-screen-label="Área do cliente">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:32px"><div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">Área do cliente</span><h1 style="margin:0;font-size:clamp(40px,5vw,60px);text-transform:uppercase;line-height:1">Olá, {{ userFirst }}</h1></div><button type="button" class="btn btn-ghost" onClick="{{ logout }}">Sair</button></div>
+<div style="display:flex;gap:28px;border-bottom:1px solid var(--color-divider);overflow-x:auto;overflow-y:hidden"><sc-for list="{{ acctTabs }}" as="tb" hint-placeholder-count="3"><button type="button" onClick="{{ tb.pick }}" style="background:transparent;border:0;border-bottom:2px solid {{ tb.border }};margin-bottom:-1px;padding:12px 0;cursor:pointer;font-family:var(--font-heading);font-weight:600;font-size:18px;text-transform:uppercase;letter-spacing:.03em;color:{{ tb.color }};white-space:nowrap">{{ tb.label }}</button></sc-for></div>
+<div style="padding-top:40px">
+<sc-if value="{{ acctProjetos }}" hint-placeholder-val="{{ true }}">
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1">Adquiridos</h2>
+<sc-if value="{{ noOrders }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">Você ainda não comprou nenhum projeto.</p></sc-if>
+<div style="display:flex;flex-direction:column;margin-top:16px;border-top:1px solid var(--color-divider)">
+<sc-for list="{{ myOrders }}" as="o" hint-placeholder-count="1"><div style="display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid var(--color-divider)"><div class="duotone" style="aspect-ratio:16/10;border:1px solid var(--color-divider)"><image-slot id="{{ o.slotId }}" shape="rect" placeholder="Print"></image-slot></div><div style="display:flex;flex-direction:column;gap:2px"><b style="font-family:var(--font-heading);font-size:20px;text-transform:uppercase">{{ o.nome }}</b><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">Pedido #{{ o.oid }} · comprado em {{ o.data }}</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn btn-ghost" onClick="{{ o.open }}">Ver página</button><a class="btn btn-primary" href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Baixar</a></div></div></sc-for>
+</div>
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1;margin-top:64px;margin-bottom:28px">Disponíveis para você</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:32px">
+<sc-for list="{{ available }}" as="p" hint-placeholder-count="3"><article class="card blueprint" style="padding:0;gap:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="duotone" style="aspect-ratio:16/10;border-bottom:1px solid var(--color-divider)"><image-slot id="{{ p.slotId }}" shape="rect" placeholder="Print do projeto"></image-slot></div><div style="padding:16px;display:flex;flex-direction:column;gap:8px"><span class="card-kicker">{{ p.tipo }}</span><h3 class="card-title" style="margin:0;font-size:20px;text-transform:uppercase">{{ p.nome }}</h3><span style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ p.precoFmt }}</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button type="button" class="btn btn-secondary" onClick="{{ p.open }}">Detalhes</button><button type="button" class="btn btn-primary" onClick="{{ p.buy }}">Comprar</button></div></div></article></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ acctDuvidas }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:48px;align-items:start">
+<div class="card blueprint" style="padding:28px;gap:16px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1">Enviar uma dúvida</h2>
+<div class="field"><label for="q-pid">Sobre qual projeto?</label><select id="q-pid" class="input" value="{{ newQPid }}" onChange="{{ setNewQPid }}"><sc-for list="{{ qProducts }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.nome }}</option></sc-for></select></div>
+<div class="field"><label for="q-txt">Sua pergunta</label><textarea id="q-txt" class="input" value="{{ newQ }}" onInput="{{ setNewQ }}" placeholder="Ex.: consigo trocar as cores do site?"></textarea></div>
+<button type="button" class="btn btn-primary" onClick="{{ sendQ }}" disabled="{{ qEmpty }}" style="padding:11px">Enviar pergunta</button>
+<sc-if value="{{ qSent }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--color-accent-700)">Pergunta enviada. A resposta aparece aqui e no seu e-mail.</span></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1">Minhas perguntas</h2>
+<sc-if value="{{ noMyQ }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:15px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">Você ainda não enviou perguntas.</p></sc-if>
+<sc-for list="{{ myQuestions }}" as="q" hint-placeholder-count="2"><div style="display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--color-divider);padding-bottom:20px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="tag {{ q.tagCls }}">{{ q.statusLabel }}</span><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ q.pidName }} · {{ q.data }}</span></div><b style="font-size:16px;line-height:1.4">{{ q.q }}</b><sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}"><div style="border-left:2px solid var(--color-accent);padding-left:12px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">Resposta da Sóter</span><p style="margin:0;font-size:15px;line-height:1.5">{{ q.a }}</p></div></sc-if></div></sc-for>
+</div>
+</div>
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1;margin-top:64px;margin-bottom:24px">Perguntas frequentes</h2>
+<div style="display:flex;flex-direction:column;gap:24px;max-width:760px"><sc-for list="{{ faq }}" as="q" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px"><h3 style="margin:0;font-size:20px;text-transform:uppercase">{{ q.q }}</h3><p style="margin:0;font-size:15px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ q.a }}</p></div></sc-for></div>
+</sc-if>
+
+<sc-if value="{{ acctPerfil }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:480px;display:flex;flex-direction:column;gap:16px">
+<div class="field"><label for="pf-nome">Nome</label><input id="pf-nome" class="input" value="{{ profNome }}" onInput="{{ setProfNome }}"></div>
+<div class="field"><label for="pf-email">E-mail</label><input id="pf-email" type="email" class="input" value="{{ profEmail }}" onInput="{{ setProfEmail }}"></div>
+<div style="display:flex;gap:12px;align-items:center"><button type="button" class="btn btn-primary" onClick="{{ saveProfile }}" style="padding:11px 20px">Salvar</button><sc-if value="{{ profSaved }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--color-accent-700)">Dados salvos.</span></sc-if></div>
+</div>
+</sc-if>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isAdminScreen }}" hint-placeholder-val="{{ false }}">
+<section style="padding:56px 0 96px" data-screen-label="Painel do administrador">
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:36px"><span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700)">Painel do administrador</span><h1 style="margin:0;font-size:clamp(40px,5vw,60px);text-transform:uppercase;line-height:1">Painel</h1></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-bottom:48px">
+<sc-for list="{{ stats }}" as="st" hint-placeholder-count="3"><div class="card blueprint" style="padding:20px;gap:6px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ st.label }}</span><span style="font-family:var(--font-heading);font-weight:600;font-size:40px;line-height:1">{{ st.value }}</span></div></sc-for>
+</div>
+<div style="display:flex;gap:28px;border-bottom:1px solid var(--color-divider);overflow-x:auto;overflow-y:hidden"><sc-for list="{{ adminTabs }}" as="tb" hint-placeholder-count="3"><button type="button" onClick="{{ tb.pick }}" style="background:transparent;border:0;border-bottom:2px solid {{ tb.border }};margin-bottom:-1px;padding:12px 0;cursor:pointer;font-family:var(--font-heading);font-weight:600;font-size:18px;text-transform:uppercase;letter-spacing:.03em;color:{{ tb.color }};white-space:nowrap">{{ tb.label }}</button></sc-for></div>
+<div style="padding-top:36px">
+<sc-if value="{{ admProdutos }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px"><h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1">Produtos</h2><button type="button" class="btn btn-primary" onClick="{{ newProduct }}">+ Novo produto</button></div>
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+<div class="card blueprint" style="padding:28px;gap:16px;margin-bottom:40px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<h3 style="margin:0;font-size:22px;text-transform:uppercase">{{ editTitle }}</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+<div class="field"><label for="ed-nome">Nome</label><input id="ed-nome" class="input" value="{{ draft.nome }}" onInput="{{ setDraftNome }}"></div>
+<div class="field"><label for="ed-preco">Preço (R$)</label><input id="ed-preco" class="input" inputmode="decimal" value="{{ draft.preco }}" onInput="{{ setDraftPreco }}"></div>
+<div class="field"><label>Tipo</label><div class="seg"><sc-for list="{{ draftTipos }}" as="o" hint-placeholder-count="2"><label class="seg-opt"><input type="radio" name="dtipo" checked="{{ o.active }}" onChange="{{ o.pick }}" style="position:absolute;opacity:0;pointer-events:none">{{ o.label }}</label></sc-for></div></div>
+<div class="field"><label>Visibilidade</label><label style="display:flex;gap:8px;align-items:center;font-size:14px;min-height:36px;cursor:pointer"><input type="checkbox" checked="{{ draft.ativo }}" onChange="{{ setDraftAtivo }}" style="accent-color:var(--color-accent)">Publicado na loja</label></div>
+</div>
+<div class="field"><label for="ed-res">Resumo</label><textarea id="ed-res" class="input" value="{{ draft.resumo }}" onInput="{{ setDraftResumo }}" style="min-height:64px"></textarea></div>
+<div class="field"><label for="ed-inc">O que está incluso — um item por linha</label><textarea id="ed-inc" class="input" value="{{ draft.incluso }}" onInput="{{ setDraftIncluso }}"></textarea></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-primary" onClick="{{ saveDraft }}" style="padding:11px 20px">Salvar alterações</button><button type="button" class="btn btn-ghost" onClick="{{ cancelEdit }}">Cancelar</button></div>
+</div>
+</sc-if>
+<div style="overflow-x:auto"><table class="table" style="width:100%;min-width:640px"><thead><tr><th>Produto</th><th>Tipo</th><th>Preço</th><th>Vendas</th><th>Status</th><th></th></tr></thead><tbody>
+<sc-for list="{{ adminProducts }}" as="p" hint-placeholder-count="4"><tr><td style="font-weight:600">{{ p.nome }}</td><td>{{ p.tipo }}</td><td>{{ p.precoFmt }}</td><td>{{ p.vendas }}</td><td><span class="tag {{ p.statusCls }}">{{ p.statusLabel }}</span></td><td style="text-align:right;white-space:nowrap"><button type="button" class="btn btn-ghost" onClick="{{ p.open }}">Ver</button><button type="button" class="btn btn-ghost" onClick="{{ p.edit }}">Editar</button></td></tr></sc-for>
+</tbody></table></div>
+</sc-if>
+
+<sc-if value="{{ admDuvidas }}" hint-placeholder-val="{{ false }}">
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1;margin-bottom:24px">Aguardando resposta ({{ pendingCount }})</h2>
+<sc-if value="{{ noPending }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">Nenhuma dúvida pendente.</p></sc-if>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:32px">
+<sc-for list="{{ pendingQ }}" as="q" hint-placeholder-count="2"><div class="card blueprint" style="padding:24px;gap:12px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><span style="font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ q.autor }} · {{ q.pidName }} · {{ q.data }}</span><b style="font-size:17px;line-height:1.4">{{ q.q }}</b><textarea class="input" value="{{ q.draft }}" onInput="{{ q.setDraft }}" placeholder="Escreva a resposta…" aria-label="Resposta"></textarea><label style="display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ q.pub }}" onChange="{{ q.togglePub }}" style="accent-color:var(--color-accent)">Publicar também no FAQ do site</label><button type="button" class="btn btn-primary" onClick="{{ q.answer }}" disabled="{{ q.draftEmpty }}" style="align-self:flex-start;padding:10px 18px">Responder</button></div></sc-for>
+</div>
+<h2 style="margin:0;font-size:26px;text-transform:uppercase;line-height:1.1;margin:64px 0 24px">Respondidas</h2>
+<div style="display:flex;flex-direction:column;border-top:1px solid var(--color-divider)">
+<sc-for list="{{ answeredQ }}" as="q" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start;padding:18px 0;border-bottom:1px solid var(--color-divider)"><div style="display:flex;flex-direction:column;gap:6px"><b style="font-size:16px">{{ q.q }}</b><p style="margin:0;font-size:14px;line-height:1.5;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ q.a }}</p><span style="font-size:12px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ q.autor }} · {{ q.pidName }}</span></div><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><span class="tag {{ q.pubCls }}">{{ q.pubLabel }}</span><button type="button" class="btn btn-ghost" onClick="{{ q.togglePublic }}" style="font-size:13px">{{ q.pubAction }}</button></div></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ admVendas }}" hint-placeholder-val="{{ false }}">
+<div style="overflow-x:auto"><table class="table" style="width:100%;min-width:560px"><thead><tr><th>Pedido</th><th>Cliente</th><th>Projeto</th><th>Data</th><th style="text-align:right">Valor</th></tr></thead><tbody>
+<sc-for list="{{ adminOrders }}" as="o" hint-placeholder-count="3"><tr><td>#{{ o.oid }}</td><td><div style="display:flex;flex-direction:column"><b>{{ o.cliente }}</b><span style="font-size:12px;color:color-mix(in srgb,var(--color-text) 70%,transparent)">{{ o.email }}</span></div></td><td>{{ o.nome }}</td><td>{{ o.data }}</td><td style="text-align:right">{{ o.valorFmt }}</td></tr></sc-for>
+</tbody></table></div>
+</sc-if>
+</div>
+</section>
+</sc-if>
+</main>
+
+<footer style="border-top:1px solid var(--color-divider)"><div style="max-width:1200px;margin:0 auto;padding:28px clamp(20px,5vw,72px);display:flex;gap:24px;flex-wrap:wrap;align-items:center;font-size:13px;color:color-mix(in srgb,var(--color-text) 70%,transparent)"><span style="font-family:var(--font-heading);font-weight:600;font-size:16px;text-transform:uppercase;color:var(--color-text)">Sóter</span><a href="#" onClick="{{ goCatalog }}">Projetos</a><a href="#" onClick="{{ goAbout }}">Sobre</a><a href="mailto:contato@soter.dev">Contato</a><span style="margin-left:auto">© 2026 Sóter</span></div></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;pixDiscount&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Vendas&quot;},&quot;showRatings&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Vendas&quot;}}">
+const SEED_PRODUCTS = [
+  { id: 'restaurante', ativo: true, nome: 'Site Restaurante', tipo: 'Site', cat: 'sites', preco: 197, nota: '4,9', aval: 18,
+    resumo: 'Cardápio digital, reservas pelo WhatsApp e mapa — pronto para publicar.',
+    desc: ['Um site de uma página pensado para restaurantes, lanchonetes e cafés. O cardápio fica num arquivo simples, então você troca pratos e preços sem mexer no resto.', 'Funciona bem no celular, carrega rápido e já vem com botão de reserva e localização.'],
+    tech: [{ n: 'HTML', d: 'Estrutura das páginas' }, { n: 'Tailwind CSS', d: 'Visual responsivo, fácil de ajustar' }, { n: 'JavaScript', d: 'Cardápio filtrável e animações leves' }],
+    incluso: ['Código-fonte completo', 'Cardápio editável em um arquivo', 'Botão de reserva via WhatsApp', 'Guia de publicação em PDF'] },
+  { id: 'agenda', ativo: true, nome: 'App de Agendamento', tipo: 'App', cat: 'apps', preco: 347, nota: '5,0', aval: 12,
+    resumo: 'Agenda online para salões, barbearias e clínicas, com lembretes automáticos.',
+    desc: ['Seus clientes escolhem o serviço, o profissional e o horário direto pelo celular. Você acompanha tudo num painel e recebe cada novo agendamento na hora.', 'Os lembretes automáticos reduzem faltas, e o app roda em iOS e Android a partir do mesmo código.'],
+    tech: [{ n: 'React Native', d: 'App para iOS e Android com um código só' }, { n: 'Firebase', d: 'Login, banco de dados e notificações' }],
+    incluso: ['App iOS + Android', 'Painel web de gestão', 'Lembretes por notificação', 'Manual de publicação nas lojas'] },
+  { id: 'loja', ativo: true, nome: 'Loja Virtual', tipo: 'Site', cat: 'sites', preco: 297, nota: '4,8', aval: 9,
+    resumo: 'Catálogo, carrinho e pagamento integrados para vender online.',
+    desc: ['Uma loja completa: vitrine, página de produto, carrinho e checkout. Ideal para quem vende pelo Instagram e quer um endereço próprio.', 'Os produtos são cadastrados num painel simples, sem precisar mexer no código.'],
+    tech: [{ n: 'Next.js', d: 'Site rápido e bem posicionado no Google' }, { n: 'Stripe', d: 'Pagamentos com cartão e Pix' }, { n: 'Tailwind CSS', d: 'Visual responsivo' }],
+    incluso: ['Código-fonte completo', 'Painel de produtos', 'Checkout integrado', 'Guia de configuração'] },
+  { id: 'landing', ativo: true, nome: 'Landing de Serviços', tipo: 'Site', cat: 'sites', preco: 147, nota: '4,9', aval: 21, novo: true,
+    resumo: 'Uma página para apresentar seu serviço e captar contatos.',
+    desc: ['Para profissionais e prestadores de serviço que precisam de presença online rápida: quem você é, o que oferece, depoimentos e um formulário de contato.', 'Você troca textos e fotos e publica no mesmo dia.'],
+    tech: [{ n: 'HTML', d: 'Estrutura da página' }, { n: 'CSS', d: 'Visual e responsividade' }],
+    incluso: ['Código-fonte completo', 'Formulário de contato', 'Seção de depoimentos', 'Guia de publicação em PDF'] }
+];
+const REVIEWS = [
+  { nome: 'Mariana S.', neg: 'Salão Bela Vista', txt: 'Coloquei no ar em um fim de semana seguindo o guia. Os clientes já agendam sozinhos.' },
+  { nome: 'Roberto L.', neg: 'Cantina do Beto', txt: 'Muito mais barato que contratar do zero, e ficou com cara de site profissional.' },
+  { nome: 'Juliana P.', neg: 'Clínica Vitta', txt: 'Tive uma dúvida na instalação e a resposta veio no mesmo dia.' }
+];
+const SEED_Q = [
+  { id: 'q1', pid: null, autor: 'Sóter', email: '', q: 'Preciso saber programar?', a: 'Não. O guia mostra passo a passo como trocar textos e imagens e publicar. Se travar, é só mandar sua dúvida pela área do cliente.', status: 'answered', publico: true, data: '01/08/2026' },
+  { id: 'q2', pid: null, autor: 'Sóter', email: '', q: 'Como recebo os arquivos?', a: 'O download é liberado assim que o pagamento é confirmado. Ele fica salvo na sua área do cliente e o link também vai por e-mail.', status: 'answered', publico: true, data: '01/08/2026' },
+  { id: 'q3', pid: null, autor: 'Sóter', email: '', q: 'Posso usar em mais de um negócio?', a: 'Cada compra vale para um negócio. Para usar em outros, compre uma licença por negócio.', status: 'answered', publico: true, data: '01/08/2026' },
+  { id: 'q4', pid: 'restaurante', autor: 'Mariana Souza', email: 'cliente@demo.com', q: 'Consigo colocar o cardápio em inglês também?', a: '', status: 'pending', publico: false, data: '18/10/2026' },
+  { id: 'q5', pid: 'agenda', autor: 'Carlos Mendes', email: 'carlos@barbeariacm.com', q: 'O app manda lembrete por WhatsApp ou só por notificação?', a: '', status: 'pending', publico: false, data: '19/10/2026' },
+  { id: 'q6', pid: 'restaurante', autor: 'Mariana Souza', email: 'cliente@demo.com', q: 'Qual hospedagem você recomenda?', a: 'Para esse projeto, Netlify ou Vercel no plano gratuito já resolvem. O guia em PDF tem o passo a passo das duas.', status: 'answered', publico: false, data: '14/09/2026' }
+];
+const SEED_ORDERS = [
+  { oid: '1042', pid: 'restaurante', email: 'cliente@demo.com', cliente: 'Mariana Souza', data: '12/09/2026', valor: 197 },
+  { oid: '1043', pid: 'agenda', email: 'carlos@barbeariacm.com', cliente: 'Carlos Mendes', data: '03/10/2026', valor: 347 },
+  { oid: '1044', pid: 'landing', email: 'ana@anafisio.com', cliente: 'Ana Ribeiro', data: '15/10/2026', valor: 147 }
+];
+const fmt = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const today = () => new Date().toLocaleDateString('pt-BR');
+const GAL = ['Página inicial', 'Página interna', 'No celular', 'Vídeo'];
+const ADMIN_EMAIL = 'admin@soter.dev';
+
+class Component extends DCLogic {
+  state = { screen: 'home', pid: 'agenda', cat: 'todos', cart: [], step: 1, pay: 'pix', tab: 'desc', img: 0, nome: '', email: '', copied: false,
+    products: SEED_PRODUCTS, questions: SEED_Q, orders: SEED_ORDERS, user: null, loginEmail: '', loginPass: '', loginError: '',
+    acctTab: 'projetos', adminTab: 'produtos', editId: null, draft: null, drafts: {}, publish: {}, newQ: '', newQPid: '', qSent: false,
+    profNome: '', profEmail: '', profSaved: false };
+  aboutRef = React.createRef();
+  go(screen, extra = {}) { this.setState({ screen, ...extra }); window.scrollTo(0, 0); }
+  nav(fn) { return e => { if (e && e.preventDefault) e.preventDefault(); fn(); }; }
+  add(id) { this.setState(s => ({ cart: s.cart.includes(id) ? s.cart : [...s.cart, id] })); }
+  login(email) {
+    const e = (email || '').trim().toLowerCase();
+    if (!/\S+@\S+\.\S+/.test(e)) return this.setState({ loginError: 'Digite um e-mail válido.' });
+    const admin = e === ADMIN_EMAIL;
+    const known = this.state.orders.find(o => o.email === e);
+    const nome = admin ? 'Administrador' : (known ? known.cliente : e.split('@')[0].replace(/^./, c => c.toUpperCase()));
+    this.setState({ user: { role: admin ? 'admin' : 'client', nome, email: e }, loginError: '', loginPass: '', loginEmail: '',
+      nome: admin ? '' : nome, email: admin ? '' : e, profNome: nome, profEmail: e, profSaved: false, acctTab: 'projetos', adminTab: 'produtos' });
+    this.go(admin ? 'admin' : 'account');
+  }
+  startEdit(id) {
+    const p = this.state.products.find(x => x.id === id);
+    this.go('admin', { adminTab: 'produtos', editId: id, draft: { nome: p.nome, tipo: p.tipo, preco: String(p.preco).replace('.', ','), resumo: p.resumo, incluso: p.incluso.join('\n'), ativo: p.ativo } });
+  }
+  saveDraft() {
+    const { draft: d, editId } = this.state;
+    const preco = parseFloat(String(d.preco).replace(',', '.')) || 0;
+    const incluso = d.incluso.split('\n').map(x => x.trim()).filter(Boolean);
+    const patch = { nome: d.nome || 'Novo projeto', tipo: d.tipo, cat: d.tipo === 'App' ? 'apps' : 'sites', preco, resumo: d.resumo, incluso, ativo: d.ativo };
+    this.setState(s => ({
+      products: editId === '__new'
+        ? [...s.products, { id: 'p' + Date.now(), nota: '–', aval: 0, novo: true, tech: [], desc: [d.resumo], ...patch }]
+        : s.products.map(p => p.id === editId ? { ...p, ...patch } : p),
+      editId: null, draft: null
+    }));
+  }
+  renderVals() {
+    const s = this.state;
+    const pixDiscount = this.props.pixDiscount ?? true;
+    const showRatings = this.props.showRatings ?? true;
+    const ink = 'var(--color-text)', muted = 'color-mix(in srgb, var(--color-text) 55%, transparent)', acc = 'var(--color-accent)';
+    const role = s.user ? s.user.role : null;
+    const isAdmin = role === 'admin';
+    const stop = e => { if (e && e.stopPropagation) e.stopPropagation(); };
+    const vendas = id => s.orders.filter(o => o.pid === id).length;
+    const decorate = p => ({
+      ...p, precoFmt: fmt(p.preco), pixFmt: fmt(Math.round(p.preco * 0.95 * 100) / 100), slotId: 'card-' + p.id, vendas: vendas(p.id),
+      statusLabel: p.ativo ? 'Publicado' : 'Oculto', statusCls: p.ativo ? 'tag-accent' : 'tag-neutral',
+      open: e => { stop(e); this.go('detail', { pid: p.id, img: 0, tab: 'desc' }); },
+      buy: e => { stop(e); this.add(p.id); this.go('checkout', { step: 1 }); },
+      add: () => this.add(p.id),
+      edit: e => { stop(e); this.startEdit(p.id); }
+    });
+    const everything = s.products.map(decorate);
+    const all = everything.filter(p => p.ativo);
+    const pName = id => { const p = s.products.find(x => x.id === id); return p ? p.nome : 'Geral'; };
+    const filtered = all.filter(p => s.cat === 'todos' || p.cat === s.cat);
+    const cur = everything.find(p => p.id === s.pid) || all[0];
+    const cartItems = s.cart.map(id => all.find(p => p.id === id)).filter(Boolean).map(p => ({
+      ...p, remove: () => this.setState(st => ({ cart: st.cart.filter(x => x !== p.id) }))
+    }));
+    const subtotal = cartItems.reduce((a, p) => a + p.preco, 0);
+    const discount = pixDiscount && s.pay === 'pix' ? Math.round(subtotal * 5) / 100 : 0;
+    const toStep = n => () => { this.setState({ step: n, copied: false }); window.scrollTo(0, 0); };
+    const dataValid = s.nome.trim().length > 1 && /\S+@\S+\.\S+/.test(s.email);
+    const tabsOf = (defs, key) => defs.map(([id, label]) => ({ label, border: s[key] === id ? acc : 'transparent', color: s[key] === id ? ink : muted, pick: () => this.setState({ [key]: id }) }));
+    const faq = s.questions.filter(q => q.status === 'answered' && q.publico);
+    const myEmail = s.user ? s.user.email : '';
+    const myOrders = s.orders.filter(o => o.email === myEmail).map(o => {
+      const p = everything.find(x => x.id === o.pid); return p ? { ...p, oid: o.oid, data: o.data, slotId: 'card-' + p.id } : null;
+    }).filter(Boolean);
+    const owned = myOrders.map(o => o.id);
+    const myQuestions = s.questions.filter(q => q.email === myEmail).slice().reverse().map(q => ({
+      ...q, pidName: pName(q.pid), answered: q.status === 'answered', statusLabel: q.status === 'answered' ? 'Respondida' : 'Aguardando resposta', tagCls: q.status === 'answered' ? 'tag-accent' : 'tag-outline'
+    }));
+    const pending = s.questions.filter(q => q.status === 'pending');
+    const setQ = (id, patch) => this.setState(st => ({ questions: st.questions.map(q => q.id === id ? { ...q, ...patch } : q) }));
+    const draftSet = k => e => { const v = k === 'ativo' ? e.target.checked : e.target.value; this.setState(st => ({ draft: { ...st.draft, [k]: v } })); };
+    return {
+      showRatings, pixDiscount,
+      isHome: s.screen === 'home', isCatalog: s.screen === 'catalog', isDetail: s.screen === 'detail', isCheckout: s.screen === 'checkout',
+      isLogin: s.screen === 'login', isAccount: s.screen === 'account' && role === 'client', isAdminScreen: s.screen === 'admin' && isAdmin,
+      isGuest: !role, isClient: role === 'client', isAdmin, notAdmin: !isAdmin,
+      goHome: this.nav(() => this.go('home')),
+      goCatalog: this.nav(() => this.go('catalog')),
+      goLogin: this.nav(() => this.go('login', { loginError: '' })),
+      goAccount: this.nav(() => this.go(role === 'client' ? 'account' : 'login')),
+      goAdmin: this.nav(() => this.go(isAdmin ? 'admin' : 'login')),
+      logout: this.nav(() => this.go('home', { user: null, nome: '', email: '', editId: null, draft: null })),
+      goCart: () => this.go('checkout', { step: 1 }),
+      goAbout: this.nav(() => {
+        this.setState({ screen: 'home' }, () => {
+          const el = this.aboutRef.current;
+          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+        });
+      }),
+      aboutRef: this.aboutRef,
+      cartCount: s.cart.length,
+      featured: all.slice(0, 3),
+      testimonials: REVIEWS.slice(0, 2),
+      filtered,
+      countLabel: filtered.length + (filtered.length === 1 ? ' projeto' : ' projetos'),
+      filters: [['todos', 'Todos'], ['sites', 'Sites'], ['apps', 'Apps']].map(([id, label]) => ({ label, active: s.cat === id, pick: () => this.setState({ cat: id }) })),
+      cur,
+      addLabel: s.cart.includes(cur.id) ? 'No carrinho ✓' : 'Adicionar ao carrinho',
+      gallery: GAL.map((label, i) => ({
+        label, num: '0' + (i + 1), slotId: cur.id + '-g' + i, placeholder: i === 3 ? 'Vídeo de apresentação' : 'Print — ' + label.toLowerCase(),
+        display: s.img === i ? 'block' : 'none', border: s.img === i ? acc : 'var(--color-divider)', color: s.img === i ? ink : muted,
+        pick: () => this.setState({ img: i })
+      })),
+      tabs: tabsOf([['desc', 'Descrição'], ['tech', 'Tecnologias'], ['reviews', 'Avaliações'], ['faq', 'Dúvidas']], 'tab'),
+      tabDesc: s.tab === 'desc', tabTech: s.tab === 'tech', tabReviews: s.tab === 'reviews', tabFaq: s.tab === 'faq',
+      reviews: REVIEWS, faq, curFaq: faq.filter(q => !q.pid || q.pid === cur.id),
+      steps: ['Carrinho', 'Dados', 'Pagamento', 'Download'].map((label, i) => ({
+        n: '0' + (i + 1), label, bar: i < s.step ? acc : 'var(--color-divider)', color: i + 1 === s.step ? ink : (i < s.step ? 'var(--color-accent-700)' : muted)
+      })),
+      s1: s.step === 1, s2: s.step === 2, s3: s.step === 3, s4: s.step === 4, notS4: s.step !== 4,
+      cartItems, cartEmpty: cartItems.length === 0,
+      toStep1: toStep(1), toStep2: toStep(2), toStep3: toStep(3),
+      toStep4: () => {
+        let n = Math.max(...s.orders.map(o => +o.oid)) + 1;
+        const email = role === 'client' ? myEmail : s.email.trim().toLowerCase();
+        const novos = cartItems.map(p => ({ oid: String(n++), pid: p.id, email, cliente: s.nome || email, data: today(), valor: discount ? p.preco * 0.95 : p.preco }));
+        this.setState({ orders: [...s.orders, ...novos], step: 4, copied: false }); window.scrollTo(0, 0);
+      },
+      nome: s.nome, email: s.email,
+      setNome: e => this.setState({ nome: e.target.value }),
+      setEmail: e => this.setState({ email: e.target.value }),
+      dataInvalid: !dataValid,
+      emailShown: s.email || 'seu e-mail',
+      payOpts: [['pix', 'Pix'], ['card', 'Cartão'], ['boleto', 'Boleto']].map(([id, label]) => ({ label, active: s.pay === id, pick: () => this.setState({ pay: id }) })),
+      payPix: s.pay === 'pix', payCard: s.pay === 'card', payBoleto: s.pay === 'boleto',
+      copyPix: () => this.setState({ copied: true }),
+      copyLabel: s.copied ? 'Código copiado ✓' : 'Copiar código',
+      subtotalFmt: fmt(subtotal), discountFmt: fmt(discount), hasDiscount: discount > 0, totalFmt: fmt(subtotal - discount),
+      finishLabel: role === 'client' ? 'Ir para minha conta' : 'Voltar para a loja',
+      finish: () => this.go(role === 'client' ? 'account' : 'home', { cart: [], step: 1, acctTab: 'projetos' }),
+
+      loginEmail: s.loginEmail, loginPass: s.loginPass, loginError: s.loginError, hasLoginError: !!s.loginError,
+      setLoginEmail: e => this.setState({ loginEmail: e.target.value }),
+      setLoginPass: e => this.setState({ loginPass: e.target.value }),
+      doLogin: () => this.login(s.loginEmail),
+      demoClient: () => this.login('cliente@demo.com'),
+      demoAdmin: () => this.login(ADMIN_EMAIL),
+
+      userFirst: s.user ? s.user.nome.split(' ')[0] : '',
+      acctTabs: tabsOf([['projetos', 'Meus projetos'], ['duvidas', 'Dúvidas'], ['perfil', 'Perfil']], 'acctTab'),
+      acctProjetos: s.acctTab === 'projetos', acctDuvidas: s.acctTab === 'duvidas', acctPerfil: s.acctTab === 'perfil',
+      myOrders, noOrders: myOrders.length === 0,
+      available: all.filter(p => !owned.includes(p.id)),
+      qProducts: [{ id: '', nome: 'Dúvida geral' }, ...myOrders.map(p => ({ id: p.id, nome: p.nome })), ...all.filter(p => !owned.includes(p.id)).map(p => ({ id: p.id, nome: p.nome }))],
+      newQ: s.newQ, newQPid: s.newQPid, qEmpty: !s.newQ.trim(), qSent: s.qSent,
+      setNewQ: e => this.setState({ newQ: e.target.value, qSent: false }),
+      setNewQPid: e => this.setState({ newQPid: e.target.value }),
+      sendQ: () => {
+        if (!s.newQ.trim()) return;
+        this.setState(st => ({ questions: [...st.questions, { id: 'q' + Date.now(), pid: st.newQPid || null, autor: st.user.nome, email: st.user.email, q: st.newQ.trim(), a: '', status: 'pending', publico: false, data: today() }], newQ: '', qSent: true }));
+      },
+      myQuestions, noMyQ: myQuestions.length === 0,
+      profNome: s.profNome, profEmail: s.profEmail, profSaved: s.profSaved,
+      setProfNome: e => this.setState({ profNome: e.target.value, profSaved: false }),
+      setProfEmail: e => this.setState({ profEmail: e.target.value, profSaved: false }),
+      saveProfile: () => this.setState(st => ({ user: { ...st.user, nome: st.profNome || st.user.nome }, nome: st.profNome, profSaved: true })),
+
+      stats: [
+        { label: 'Vendas', value: String(s.orders.length) },
+        { label: 'Receita', value: fmt(s.orders.reduce((a, o) => a + o.valor, 0)) },
+        { label: 'Dúvidas pendentes', value: String(pending.length) }
+      ],
+      adminTabs: tabsOf([['produtos', 'Produtos'], ['duvidas', 'Dúvidas (' + pending.length + ')'], ['vendas', 'Vendas']], 'adminTab'),
+      admProdutos: s.adminTab === 'produtos', admDuvidas: s.adminTab === 'duvidas', admVendas: s.adminTab === 'vendas',
+      adminProducts: everything,
+      newProduct: () => this.setState({ editId: '__new', draft: { nome: '', tipo: 'Site', preco: '', resumo: '', incluso: '', ativo: false } }),
+      editing: !!s.draft, editTitle: s.editId === '__new' ? 'Novo produto' : 'Editar — ' + (s.draft ? s.draft.nome : ''),
+      draft: s.draft || {},
+      setDraftNome: draftSet('nome'), setDraftPreco: draftSet('preco'), setDraftResumo: draftSet('resumo'), setDraftIncluso: draftSet('incluso'), setDraftAtivo: draftSet('ativo'),
+      draftTipos: ['Site', 'App'].map(t => ({ label: t, active: s.draft && s.draft.tipo === t, pick: () => this.setState(st => ({ draft: { ...st.draft, tipo: t } })) })),
+      saveDraft: () => this.saveDraft(),
+      cancelEdit: () => this.setState({ editId: null, draft: null }),
+      pendingCount: pending.length, noPending: pending.length === 0,
+      pendingQ: pending.map(q => {
+        const draft = s.drafts[q.id] || ''; const pub = s.publish[q.id] ?? true;
+        return { ...q, pidName: pName(q.pid), draft, pub, draftEmpty: !draft.trim(),
+          setDraft: e => { const v = e.target.value; this.setState(st => ({ drafts: { ...st.drafts, [q.id]: v } })); },
+          togglePub: () => this.setState(st => ({ publish: { ...st.publish, [q.id]: !pub } })),
+          answer: () => { if (draft.trim()) setQ(q.id, { a: draft.trim(), status: 'answered', publico: pub }); } };
+      }),
+      answeredQ: s.questions.filter(q => q.status === 'answered').slice().reverse().map(q => ({
+        ...q, pidName: pName(q.pid), pubLabel: q.publico ? 'No FAQ do site' : 'Só para o cliente', pubCls: q.publico ? 'tag-accent' : 'tag-neutral',
+        pubAction: q.publico ? 'Tirar do FAQ' : 'Publicar no FAQ', togglePublic: () => setQ(q.id, { publico: !q.publico })
+      })),
+      adminOrders: s.orders.slice().reverse().map(o => ({ ...o, nome: pName(o.pid), valorFmt: fmt(o.valor) }))
+    };
+  }
+}
+</script>
+</body>
+</html>
