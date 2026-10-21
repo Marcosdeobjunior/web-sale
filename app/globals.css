@@ -7,7 +7,7 @@ a:hover { color: var(--color-accent-900); }
 button { font: inherit; }
 
 /* Layout */
-.shell { min-height: 100vh; display: flex; flex-direction: column; }
+.shell { min-height: 100vh; display: flex; flex-direction: column; overflow-x: clip; }
 .gutter { padding-inline: clamp(20px, 5vw, 72px); }
 .container { flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 72px); box-sizing: border-box; }
 .top { position: sticky; top: 0; z-index: 10; background: var(--color-bg); }
@@ -19,6 +19,7 @@ button { font: inherit; }
 .admin-bar a { color: var(--color-bg); }
 .admin-bar strong { font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 .site-nav { border-bottom: 1px solid var(--color-divider); }
+.site-nav .btn { white-space: nowrap; }
 .site-nav .nav-brand { font-size: 22px; text-transform: uppercase; letter-spacing: .04em; color: var(--color-text); }
 .site-footer { border-top: 1px solid var(--color-divider); }
 .site-footer-inner {
@@ -76,6 +77,18 @@ button { font: inherit; }
   text-transform: uppercase; letter-spacing: .03em; color: var(--muted-55); white-space: nowrap;
 }
 .tab[aria-selected="true"] { border-bottom-color: var(--color-accent); color: var(--color-text); }
+
+/* Hero da home: formas estáticas atrás do texto */
+.hero { position: relative; isolation: isolate; }
+.hero > :not(.hero-shape) { position: relative; z-index: 1; }
+.hero-shape {
+  position: absolute; z-index: 0; pointer-events: none;
+  top: 32px; right: calc(-1 * clamp(0px, 5vw, 72px));
+  width: clamp(320px, 46%, 560px); aspect-ratio: 600 / 560;
+}
+@media (max-width: 760px) {
+  .hero-shape { top: 12px; right: -96px; width: 340px; opacity: .35; }
+}
 
 /* Placeholder de imagem (os prints serão enviados pelo dono) */
 .image-slot {
