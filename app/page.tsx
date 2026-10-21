@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { HeroShape } from "@/components/HeroShape";
 import { FeaturedCard } from "@/components/ProductCard";
 import { Corners, ImageSlot, SectionHead } from "@/components/ui";
 import { config } from "@/lib/config";
@@ -21,8 +20,7 @@ export default function HomePage() {
   const router = useRouter();
   return (
     <>
-      <section className="stack hero" style={{ padding: "96px 0 72px", gap: 28 }}>
-        <HeroShape />
+      <section className="stack" style={{ padding: "96px 0 72px", gap: 28 }}>
         <h1 style={{ margin: 0, fontSize: "clamp(44px,7vw,92px)", lineHeight: 1.02, textTransform: "uppercase", letterSpacing: ".01em", maxWidth: "14ch" }}>
           Sites e apps prontos para o seu negócio.
         </h1>
